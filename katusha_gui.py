@@ -22,6 +22,10 @@ j=0
 
 THREAD_DEBUG = False
 
+# Width and heigh of image from camera
+CAMERA_WIDTH  = 640
+CAMERA_HEIGHT = 480
+
 # Format of robot message in Regular Expression
 COMMAND_FORMAT = r'[^0-9a-fA-F][0-9a-fA-F]{4}'
 
@@ -35,7 +39,7 @@ def dec2hex(n):
 
 
 def sensorsOff():
-    ser.write('='+dec2hex(0x0000)) # Timer 1
+    ser.write('='+dec2hex(0x0000)) # Timer 0
     ser.write('='+dec2hex(0x1000)) # Timer 1
 
 def sensorsOn():
@@ -134,8 +138,8 @@ def processMessageBuffer():
 
 
 def mouseMove(event):
-    posH = 255-event.x*255/640
-    posV = event.y*255/480
+    posH = 255-event.x*255/CAMERA_WIDTH
+    posV = event.y*255/CAMERA_HEIGHT
     #print "MouseX: ",event.x," posH:",posH, " MouseY: ",event.y," posV:",posV
     headH(posH)
     headV(posV)
@@ -204,8 +208,6 @@ image_label = Label(frame, image=tkimage)
 image_label.image = tkimage
 image_label.place(x=0, y=0)
 
-CAMERA_WIDTH  = 640
-CAMERA_HEIGHT = 480
 label_r1 = Label(frame, text="R1=NO DATA")
 label_r1.place(x=CAMERA_WIDTH+10, y=10)
 
@@ -224,33 +226,3 @@ image_label.bind("<ButtonRelease>", mouseButtonRelease)
 root.bind("<KeyPress>", keyPress)
 root.bind("<Destroy>", destroy)
 root.mainloop()
-
-
-#def Hello(event):
-#    print "Yet another hello world"
-#
-#btn = Button(root,                  #родительское окно
-#    text="Click me",       #надпись на кнопке
-#    width=30,height=5,     #ширина и высота
-#    bg="black",fg="white") #цвет фона и надписи
-#btn.bind("<Button-1>", Hello)       #при нажатии ЛКМ на кнопку вызывается функция Hello
-#btn.pack()                          #расположить кнопку на главном окне
-#root.mainloop()
-#tk = Tk(); f = Frame(); f.pack()
-#time_var = StringVar()
-#time_label = Label(f, textvariable=time_var, font="Courier 60",
-#                   bg="Black", fg="#00B000")
-#time_label.pack()
-#
-#def tick():
-#  t = time.localtime(time.time())
-#  if t[5] % 2:
-#    fmt = "%H:%M :)"
-#  else:
-#    fmt = "%H %M"
-#  time_var.set(time.strftime(fmt, t))
-#  time_label.after(500, tick)
-#
-#time_label.after(500, tick)
-#tk.mainloop()
-#
